@@ -6,141 +6,177 @@
 \usepackage{graphicx}
 \usepackage{parskip}
 \begin{document}
-
-\begin{center}
-\Large
-Computer Science Tripos -- Part II -- Project Proposal\\[4mm]
-\LARGE
-How to write a dissertation in \LaTeX\\[4mm]
-
-\large
-M.~Richards, St John's College
-
-Originator: Dr M.~Richards
-
-14 October 2011
-\end{center}
-
-\vspace{5mm}
-
-\textbf{Project Supervisor:} Dr M.~Richards
-
-\textbf{Director of Studies:} Dr M.~Richards
-
-\textbf{Project Overseers:} Dr F.~H.~King  \& Dr A.~W.~Moore
-
-% Main document
-
-\section*{Introduction}
-
-\emph{The problem to be addressed.}
-
-Many students write their CST dissertations in \LaTeX\ -- and spend a
-fair amount of time learning just how to do that. The purpose of this
-project is to write a demonstration dissertation that provides
-a starting point to show how it is done.
-
-This core proposal document will be augmented by a separately-printed
-cover sheet at the front and a resource form at the end. Additional
-sheets for risk assessment and human resources may also need to be
-included.
-
-This document will elaborate much of the material that is summarised on
-the additional sheets.
-
-\section*{Starting point}
-
-\emph{Describe existing state of the art, previous work in this area,
-  libraries and databases to be used. Describe the state of any
-  existing codebase that is to be built on.}
-
-I am already able to write prose using the English language. I have an
-online dictionary, etc.
-
-\section*{Resources required}
-
-\emph{A note of the resources required and confirmation of access.}
-
-For this project I shall mainly use my own quad-core computer that
-runs Fedora Linux. Backup will be to github and/or to an SVN
-repository on an external hard disk that is dumped to writable CD/DVD
-media. I have another similar computer to hand should my main machine
-suddenly fail. I require no other special resources.
-
-\section*{Work to be done}
-
-\emph{Describe the technical work.}
-
-The project breaks down into the following sub-projects:
-
-\begin{enumerate}
-
-\item The construction of a skeleton dissertation with the required
-  structure. This involves writing the Makefile and making dummy
-  files for the title page, the proforma, chapters 1 to 5, the
-  appendices and the proposal.
-
-\item Filling in the details required in the cover page and proforma.
-
-\item Writing the contents of chapters 1 to 5, including examples of
-  common \LaTeX\ constructs.
-
-\item Adding a example of how to use floating figures and ``encapsulated
-  PostScript'' or PDF diagrams.
-
-\end{enumerate}
-
-\section*{Success citeria}
-
-\emph{Describe what you expect to be able to demonstrate at the
-end of the project and how you are going to evaluate your achievement.}
-
-The project will be a success if I have a completed dissertation with
-the correct chapter titles and I have achieved my other success
-criteria, which are to blah \ldots
-
-
-\section*{Possible extensions}
-
-{\em Potential further envisaged evaluation metrics or extensions.}
-
-If I achieve my main result early I shall try the following
-alternative experiment or method of evaluation \ldots
-
-
-\section*{Timetable}
-
-\emph{A workplan of perhaps ten or so two-week work-packages,
-as well as milestones to be achieved along the way. Provide a
-target date for each milestone.}
-
-Planned starting date is 16/10/2011.
-
-\begin{enumerate}
-
-\item \textbf{Michaelmas weeks 2--4} Learn to use X. Read book Y. Read papers Z.
-
-\item \textbf{Michaelmas weeks 5--6} Do preliminary test of Q.
-
-\item \textbf{Michaelmas weeks 7--8} Start implementation of main task A.
-
-\item \textbf{Michaelmas vacation} Finish A and start main task B.
-
-\item \textbf{Lent weeks 0--2} Write progress report. Generate corpus of
-  test examples. Finish task B.
-
-\item \textbf{Lent weeks 3--5} Run main experiments and achieve working project.
-
-\item \textbf{Lent weeks 6--8} Second main deliverable here.
-
-\item \textbf{Easter vacation:} Extensions and writing dissertation main
-  chapters.
-
-\item \textbf{Easter term 0--2:}  Further evaluation and complete dissertation.
-
-\item \textbf{Easter term 3:} Proof reading and then an early submission
-  so as to concentrate on examination revision.
-
-\end{enumerate}
-
+	
+	\begin{center}
+		\Large
+		Computer Science Tripos -- Part II -- Project Proposal\\[4mm]
+		\LARGE
+		An implementation and evaluation of Loopix, an anonymous communication system\\[4mm]
+		
+		\large
+		Jun Siang Cheah, Christ's College
+		
+		Originator: Dr Alastair Beresford
+		
+		1 October 2017
+	\end{center}
+	
+	\vspace{5mm}
+	
+	\textbf{Project Supervisor:} Dr Alastair Beresford
+	
+	\textbf{Director of Studies:} Dr Richard Mortier
+	
+	\textbf{Project Overseers:} Dr Timothy Jones \& Prof Marcelo Fiore 
+	
+	% Main document
+	
+	\section*{Introduction}
+	
+	Anonymous communication systems such as Tor are becoming increasingly important in the current age of pervasive data collection, surveillance and censorship, allowing for privacy and anonymity when many parties are trying to collect as much data as possible on individuals, either for commercial exploitation or government surveillance.
+	
+	However, the most widely used anonymous communication system, Tor, is vulnerable to attacks such as traffic correlation by a global passive adversary and corrupt nodes performing active attacks to deanonymize users. Government agencies such as the National Security Agency (NSA) and Government Communications Headquarters (GCHQ) have already demonstrated their ability to deanonymize a small fraction of Tor users.\cite{torstinks} Alternative systems that are not vulnerable to a global passive adversary tend to be high-latency, low-bandwidth, which severely limits possible applications.
+	
+	Loopix\cite{piotrowska2017loopix} is a newly proposed protocol that provides medium-latency, low-bandwidth communication that provides strong anonymity against both active attackers and global passive adversaries. The medium-latency property of the system allows for both low-latency applications such as instant messaging and high-latency applications such as email. Another feature of Loopix is the ability to store messages for offline clients. This is helpful for peer-to-peer communications when it is difficult to have both clients to be online at the same time such as mobile devices.
+	
+	Currently, the reference proof of concept implementation is written in Python with a dependency on Sphinx\cite{danezis2009sphinx}. A Python implementation works well enough for server nodes where there are not many constraints, however, the Python code is not portable for mobile devices. As such, I plan to implement Loopix as a Java library, which can then run on any system with a JVM installed, such as Android. After the implementation is complete, I would evaluate the performance of the system (bandwidth, latency, and complexity) and validate some of the privacy claims in the original paper.
+	
+	
+	\section*{Starting point}
+	
+	%\emph{Describe existing state of the art, previous work in this area,
+	%  libraries and databases to be used. Describe the state of any
+	%  existing codebase that is to be built on.}
+	
+	Currently, there exists a Python implementation of Loopix which I plan to use to test my own implementation against and would allow for a faster iteration cycle as I wouldn't need a complete implementation to begin testing. I will also refer to the existing implementation for details that are specified in the paper. I will also rely on the BouncyCastle Java library for cryptographic primitives.
+	
+	The cryptography used will relate to the Security I and II courses, and I will draw upon the Part IB Mathematical Methods course for the statistical theory used in Loopix. I have some experience with the theory behind mix networks from working with Tor.
+	
+	I have written an existing Android application that currently uses Tor for peer-to-peer communication which can be adapted to use Loopix instead for demonstatration purposes.
+	
+	\section*{Project structure}
+	
+	The aim of this project is to provide a Java library implementation of Loopix, therefore taking advantage of the JVM's widespread adoption to be able to run Loopix on more systems, with a primary goal of allowing Android applications to use Loopix for communication.
+	
+	The project can be broken down into the following sub-projects:
+	
+	\begin{enumerate}
+		\item \textbf{Implementation of the Sphinx library:} Loopix uses the Sphinx mix format as the interchange format for messages, thus a Java Sphinx library needs to be written before continuing. Sphinx uses AES, Diffie-Hellman and SHA256 cryptographic primitives, which is implemented by the BouncyCastle library. I will use the existing implementation to test my own implementation by generating and parsing messages on both sides.
+		\item \textbf{Implementation of the Loopix library:} This library will the at the very minimum provide a client implementation of Loopix that is compatible with the existing Python implementation for servers. The Loopix architecture calls for 3 components: the client, provider and mix nodes. All 3 share the same message processing pipeline, and only differ in behaviour upon parsing the decrypted message.
+		\item \textbf{Demonstration application:} An application that uses the resulting Java library to demonstrate that the library is working. A possible application to implement is an instant messaging application.
+		\item \textbf{Evaluation:} The final part of the project is to benchmark the performance of the implementation in terms of bandwidth and latency overheads. I will also need to verify some of the claims made in the paper.
+	\end{enumerate}
+	
+	\section*{Success criteria}
+	
+	The project will be a success if:
+	
+	\begin{itemize}
+		\item I have completed a Java implementation of the Sphinx library.
+		\item I have completed at the very minimum a client implementation of Loopix in Java.
+		\item I have created a demo app that uses the library to send messages.
+		\item I have produced an evaluation of my Loopix implementation, in terms of bandwidth throughput, bandwidth overhead, latency overhead and complexity overhead.
+	\end{itemize}
+	
+	
+	\section*{Possible extensions}
+	
+	If I achieve my main result early, then possible extensions include:
+	
+	\begin{itemize}
+		\item \textbf{Discoverability:} At the moment, all nodes in the network must be preloaded with a list of all the other nodes in the network along with their IP addresses. This simply does not scale and fails to deal with failures with some of the nodes in the network and mobility of real clients. A potential solution could be to borrow Tor's directory authority model and implement it within Loopix. Implementing a directory also allows for a scheme similar to Tor's .onion domain names to refer to other nodes, rather than their IP address.
+		\item \textbf{Provider resource starvation:} Currently, providers store all messages in memory with no eviction strategy. This is bad in many ways, as providers can run out of memory due to either a malicious actor flooding the provider with messages, an organic increase in traffic, or users never coming online to clear their inbox. I could research into methods for mitigating and handling this issue, as a user would find messages disappearing a bad experience.
+		\item \textbf{Android application demo:} I could build a demo app on Android which is where Loopix shines with its offline message storage.
+	\end{itemize}
+	
+	
+	\section*{Timetable and milestones}
+	
+	\textbf{Weeks 1-2 | 16 Oct - 29 Oct | Michaelmas term}
+	
+	\begin{itemize}
+		\item Familiarise myself with the Sphinx and Loopix papers and implementation.
+		\item Setup test scripts for comparing outputs from Sphinx/Loopix.
+	\end{itemize}
+	
+	\textbf{Weeks 3-4 | 30 Oct - 12 Nov | Michaelmas term}
+	
+	\begin{itemize}
+		\item Implement the Sphinx library in Java.
+	\end{itemize}
+	
+	\textbf{Milestone 1: }Sphinx library completed
+	
+	\textbf{Weeks 5-8 | 13 Nov - 17 Dec | Michaelmas term + Christmas vacation}
+	
+	\begin{itemize}
+		\item Implement the client portion of the Loopix library in Java.
+		\item Create a command line wrapper around the library to test with.
+		\item Start initial testing using the existing Python implementation to setup providers and mix nodes on a small scale.
+	\end{itemize}
+	
+	\textbf{Milestone 2:} Client portion of the library done, and I can send and receive messages using the library.
+	
+	\textbf{Weeks 9-10 | 18 Dec - 31 Dec | Christmas vacation}
+	
+	\begin{itemize}
+		\item Implement the provider/mix node portion of the Loopix library.
+	\end{itemize}
+	
+	\textbf{Weeks 11-13 | 1 Jan - 21 Jan | Christmas vacation + Lent term}
+	
+	Contingency time set aside for any major issues found up to this point.
+	
+	\textbf{Weeks 14-15 | 22 Jan - 4 Feb | Lent term}
+	
+	\begin{itemize}
+		\item Implement a demo application that uses the Loopix library.
+		\item Submit Progress Report
+	\end{itemize}
+	
+	\textbf{Milestone 3:} A working demo that can be shown to my supervisor/DoS.
+	
+	\textbf{Weeks 16-17 | 5 Feb - 18 Feb | Lent term}
+	
+	\begin{itemize}
+		\item Research existing attacks on anonymous communication systems.
+	\end{itemize}
+	
+	\textbf{Weeks 18-20 | 19 Feb - 11 Mar | Lent term}
+	
+	\begin{itemize}
+		\item Evaluate the project, recording any necessary data.
+	\end{itemize}
+	
+	\textbf{Milestone 4:} Evaluation data gathered
+	
+	\textbf{Weeks 21-25 | 12 Mar - 15 Apr | Lent term + Easter vacation}
+	
+	\begin{itemize}
+		\item Write and submit my draft dissertation.
+	\end{itemize}
+	
+	\textbf{Milestone 5:} Draft dissertation complete!
+	
+	\section*{Resources required}
+	
+	A list of required resources:
+	
+	\begin{itemize}
+		\item My own machines:
+		\begin{itemize}
+			\item Desktop computer (AMD Ryzen 5 1600, 32GB RAM, Windows/Ubuntu 16.04)
+			\item Laptop (Intel i7-4720HQ, 8GB RAM, Windows)
+			\item Backup desktop (Intel i5-6500, 16GB RAM, Windows/Ubuntu 16.04)
+		\end{itemize}
+		\item My own dedicated server (Intel i5-2300, 16GB RAM, Ubuntu 16.04)
+		\item BouncyCastle library\footnote{\url{https://www.bouncycastle.org/}}
+		\item Loopix source\footnote{\url{https://github.com/UCL-InfoSec/loopix}}
+	\end{itemize}
+	
+	Backups will be provided by Dropbox and OneDrive. Revision control will be provided using GitHub, with a backup remote on Bitbucket. If my machines fail, I can switch to using the MCS machines, and if my dedicated server fails, I can spin up VMs on any of the cloud providers with free student credit.
+	
+	\bibliographystyle{unsrt}
+	\bibliography{refs}
+	
 \end{document}
