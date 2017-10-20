@@ -18,7 +18,7 @@
 		
 		Originator: Dr Alastair Beresford
 		
-		1 October 2017
+		19 October 2017
 	\end{center}
 	
 	\vspace{5mm}
@@ -33,13 +33,13 @@
 	
 	\section*{Introduction}
 	
-	Anonymous communication systems such as Tor are becoming increasingly important in the current age of pervasive data collection, surveillance and censorship, allowing for privacy and anonymity when many parties are trying to collect as much data as possible on individuals, either for commercial exploitation or government surveillance.
+	Anonymous communication systems such as Tor are becoming increasingly important in the current age of pervasive data collection, surveillance and censorship, allowing for privacy and anonymity when parties are trying to collect as much data as possible on individuals, either for commercial exploitation or government surveillance.
 	
-	However, the most widely used anonymous communication system, Tor, is vulnerable to attacks such as traffic correlation by a global passive adversary and corrupt nodes performing active attacks to deanonymize users. Government agencies such as the National Security Agency (NSA) and Government Communications Headquarters (GCHQ) have already demonstrated their ability to deanonymize a small fraction of Tor users.\cite{torstinks} Alternative systems that are not vulnerable to a global passive adversary tend to be high-latency, low-bandwidth, which severely limits possible applications.
+	However, the most widely used anonymous communication system, Tor, is vulnerable to attacks such as traffic correlation by a global passive adversary and corrupt nodes performing active attacks to deanonymise users. Government agencies such as the National Security Agency (NSA) and Government Communications Headquarters (GCHQ) have already demonstrated the ability to deanonymise a small fraction of Tor users.\cite{torstinks} Alternative systems that are not vulnerable to a global passive adversary tend to be high-latency, low-bandwidth, which severely limits possible applications.
 	
-	Loopix\cite{piotrowska2017loopix} is a newly proposed protocol that provides medium-latency, low-bandwidth communication that provides strong anonymity against both active attackers and global passive adversaries. The medium-latency property of the system allows for both low-latency applications such as instant messaging and high-latency applications such as email. Another feature of Loopix is the ability to store messages for offline clients. This is helpful for peer-to-peer communications when it is difficult to have both clients to be online at the same time such as mobile devices.
+	Loopix\cite{piotrowska2017loopix} is a newly proposed protocol that provides medium-latency, low-bandwidth communication that provides strong anonymity against both active attackers and global passive adversaries. The medium-latency property of the system allows for both low-latency applications such as instant messaging and high-latency applications such as email. Another feature of Loopix is the ability to store messages for offline clients. This is helpful for peer-to-peer communications when it is difficult to have both clients online at the same time such as mobile devices.
 	
-	Currently, the reference proof of concept implementation is written in Python with a dependency on Sphinx\cite{danezis2009sphinx}. A Python implementation works well enough for server nodes where there are not many constraints, however, the Python code is not portable for mobile devices. As such, I plan to implement Loopix as a Java library, which can then run on any system with a JVM installed, such as Android. After the implementation is complete, I would evaluate the performance of the system (bandwidth, latency, and complexity) and validate some of the privacy claims in the original paper.
+	Currently, the reference proof of concept implementation is written in Python with a dependency on Sphinx\cite{danezis2009sphinx}. A Python implementation works well enough for server nodes where there are not many constraints, however, the Python code is not portable for mobile devices. As such, I plan to implement Loopix as a Java library, which can then run on any system with a JVM installed such as Android. After the implementation is complete, I would evaluate the performance of the system (bandwidth, latency, and complexity) and validate some of the privacy claims in the original paper.
 	
 	
 	\section*{Starting point}
@@ -52,17 +52,17 @@
 	
 	The cryptography used will relate to the Security I and II courses, and I will draw upon the Part IB Mathematical Methods course for the statistical theory used in Loopix. I have some experience with the theory behind mix networks from working with Tor.
 	
-	I have written an existing Android application that currently uses Tor for peer-to-peer communication which can be adapted to use Loopix instead for demonstatration purposes.
+	I have written an existing Android application that currently uses Tor for peer-to-peer communication which can be adapted to use Loopix instead for demonstration purposes.
 	
 	\section*{Project structure}
 	
-	The aim of this project is to provide a Java library implementation of Loopix, therefore taking advantage of the JVM's widespread adoption to be able to run Loopix on more systems, with a primary goal of allowing Android applications to use Loopix for communication.
+	The aim of this project is to provide a Java library implementation of Loopix, therefore taking advantage of the ubiquity of JVMs to run Loopix on a larger range of devices, with a primary goal of allowing Android applications to use Loopix for communication.
 	
 	The project can be broken down into the following sub-projects:
 	
 	\begin{enumerate}
-		\item \textbf{Implementation of the Sphinx library:} Loopix uses the Sphinx mix format as the interchange format for messages, thus a Java Sphinx library needs to be written before continuing. Sphinx uses AES, Diffie-Hellman and SHA256 cryptographic primitives, which is implemented by the BouncyCastle library. I will use the existing implementation to test my own implementation by generating and parsing messages on both sides.
-		\item \textbf{Implementation of the Loopix library:} This library will the at the very minimum provide a client implementation of Loopix that is compatible with the existing Python implementation for servers. The Loopix architecture calls for 3 components: the client, provider and mix nodes. All 3 share the same message processing pipeline, and only differ in behaviour upon parsing the decrypted message.
+		\item \textbf{Implementation of the Sphinx library:} Loopix uses the Sphinx mix format as the interchange format for messages, thus a Java Sphinx library needs to be written before any work on Loopix can proceed. Sphinx uses AES, Diffie-Hellman and SHA256 cryptographic primitives, which are implemented by the BouncyCastle library. I will use the existing implementation to test my own implementation by generating and parsing messages on both sides.
+		\item \textbf{Implementation of the Loopix library:} This library will the at the very minimum provide a client implementation of Loopix that is compatible with the existing Python implementation for servers. The Loopix architecture calls for 3 components: the client, provider and mix nodes. All 3 share the same message processing pipeline and only differ in behaviour upon parsing the decrypted message.
 		\item \textbf{Demonstration application:} An application that uses the resulting Java library to demonstrate that the library is working. A possible application to implement is an instant messaging application.
 		\item \textbf{Evaluation:} The final part of the project is to benchmark the performance of the implementation in terms of bandwidth and latency overheads. I will also need to verify some of the claims made in the paper.
 	\end{enumerate}
@@ -75,7 +75,7 @@
 		\item I have completed a Java implementation of the Sphinx library.
 		\item I have completed at the very minimum a client implementation of Loopix in Java.
 		\item I have created a demo app that uses the library to send messages.
-		\item I have produced an evaluation of my Loopix implementation, in terms of bandwidth throughput, bandwidth overhead, latency overhead and complexity overhead.
+		\item I have produced an evaluation of my Loopix implementation, in terms of bandwidth throughput, bandwidth overhead, latency overhead, complexity overhead and privacy metrics.
 	\end{itemize}
 	
 	
@@ -84,8 +84,8 @@
 	If I achieve my main result early, then possible extensions include:
 	
 	\begin{itemize}
-		\item \textbf{Discoverability:} At the moment, all nodes in the network must be preloaded with a list of all the other nodes in the network along with their IP addresses. This simply does not scale and fails to deal with failures with some of the nodes in the network and mobility of real clients. A potential solution could be to borrow Tor's directory authority model and implement it within Loopix. Implementing a directory also allows for a scheme similar to Tor's .onion domain names to refer to other nodes, rather than their IP address.
-		\item \textbf{Provider resource starvation:} Currently, providers store all messages in memory with no eviction strategy. This is bad in many ways, as providers can run out of memory due to either a malicious actor flooding the provider with messages, an organic increase in traffic, or users never coming online to clear their inbox. I could research into methods for mitigating and handling this issue, as a user would find messages disappearing a bad experience.
+		\item \textbf{Discoverability:} At the moment, all nodes in the network must be preloaded with a list of all the other nodes in the network, including their IP address and public keys. This simply does not scale and fails to deal with failures with some of the nodes in the network and mobility of real clients. A potential solution could be to borrow Tor's directory authority model and implement it within Loopix. Implementing a directory also allows for a scheme similar to Tor's .onion domain names to refer to other nodes, rather than their IP address.
+		\item \textbf{Provider resource starvation:} Currently, providers store all messages in memory with no eviction strategy. This is bad in many ways, as providers can run out of memory due to either a malicious actor flooding the provider with messages, an organic increase in traffic or users never coming online to clear their inbox. I could research into methods for mitigating and handling this issue, as a user would find messages disappearing a bad experience.
 		\item \textbf{Android application demo:} I could build a demo app on Android which is where Loopix shines with its offline message storage.
 	\end{itemize}
 	
@@ -169,12 +169,12 @@
 			\item Laptop (Intel i7-4720HQ, 8GB RAM, Windows)
 			\item Backup desktop (Intel i5-6500, 16GB RAM, Windows/Ubuntu 16.04)
 		\end{itemize}
-		\item My own dedicated server (Intel i5-2300, 16GB RAM, Ubuntu 16.04)
+		\item My own dedicated servers (2x Intel i5-2300, 16GB RAM, Ubuntu 16.04)
 		\item BouncyCastle library\footnote{\url{https://www.bouncycastle.org/}}
 		\item Loopix source\footnote{\url{https://github.com/UCL-InfoSec/loopix}}
 	\end{itemize}
 	
-	Backups will be provided by Dropbox and OneDrive. Revision control will be provided using GitHub, with a backup remote on Bitbucket. If my machines fail, I can switch to using the MCS machines, and if my dedicated server fails, I can spin up VMs on any of the cloud providers with free student credit.
+	Backups will be provided by Dropbox and OneDrive. Revision control will be provided using GitHub, with a backup remote on Bitbucket. I can switch to using the MCS machines if my personal machines fail, and use student credit to run VMs with cloud providers if my servers fail.
 	
 	\bibliographystyle{unsrt}
 	\bibliography{refs}
