@@ -1,0 +1,38 @@
+\ProvidesPackage{style}
+
+% turns references into hyperlinks
+\usepackage[pdfborder={0 0 0}]{hyperref}
+
+% adjusts page layout
+\usepackage[margin=25mm]{geometry}
+
+% allows inclusion of PDF, PNG and JPG images
+\usepackage{graphicx}
+
+% used for verb in footnote
+\usepackage{fancyvrb}
+\VerbatimFootnotes
+
+% math
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+% used for highlighted code fragments
+\usepackage{minted}
+\newminted{python}{frame=single,framesep=10pt,samepage}
+\newminted{java}{frame=single,framesep=10pt,samepage}
+
+% only needed to allow inclusion of proposal.tex
+\usepackage{docmute}
+
+% modular document
+\usepackage{subfiles}
+
+ % try to avoid widows and orphans
+\raggedbottom 
+\sloppy
+\clubpenalty1000%
+\widowpenalty1000%
+
+% adjust line spacing to make more readable
+\renewcommand{\baselinestretch}{1.1}

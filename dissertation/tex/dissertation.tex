@@ -1,0 +1,21 @@
+\documentclass[12pt,a4paper,twoside,openright]{report}
+\usepackage{style}
+
+\begin{document}
+	\subfile{coverpage}
+	\subfile{proforma}
+	\newpage
+	\subfile{declaration}
+	\tableofcontents
+	\pagestyle{headings}
+	\subfile{introduction}
+	\subfile{preparation}
+	\subfile{implementation}
+	\subfile{evaluation}
+	\subfile{conclusions}
+	\appendix
+	\chapter{Project Proposal}
+	%\input{../proposal/proposal}
+	\bibliographystyle{plain}
+	\bibliography{refs}
+\end{document}
