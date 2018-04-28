@@ -10,14 +10,26 @@
 
 \chapter{Introduction}
 
+Loopix \cite{piotrowska2017loopix} is an anonymous communication system that provides medium-latency, low-bandwidth communication with strong anonymity. Loopix is traffic analysis resistant to both active attackers and global passive adversaries. This is achieved by utilising cover traffic and Poisson mixing which adds brief independent message delays.
+
+I have successfully created a Java implementation of the Loopix client that is compatible with the original Python implementation. I also provide an analysis of my client and Loopix by measuring bandwidth and latency overhead and discussed the viability of Loopix on mobile devices.
+
 \section{Motivation}
 
-Edward Snowden, Tor vuln to traffic analysis
+Anonymous communication systems such as Tor \cite{dingledine2004tor} are becoming increasingly important in the current age of pervasive data collection, surveillance and censorship, allowing for privacy and anonymity when parties are trying to collect as much data as possible on individuals, either for commercial exploitation or government surveillance.
 
-\section{Overview}
+However, the most widely used anonymous communication system, Tor, is vulnerable to attacks such as traffic correlation by a global passive adversary and corrupt nodes performing active attacks to deanonymise users. Government agencies such as the National Security Agency (NSA) and Government Communications Headquarters (GCHQ) have already demonstrated the ability to deanonymise a small fraction of Tor users \cite{torstinks}. Alternative systems that are not vulnerable to a global passive adversary tend to be high-latency, low-bandwidth, which severely limits possible applications due to the anonymity trilemma of choosing two of strong anonymity, low bandwidth overhead, or low latency \cite{das2017anonymity}.
+
+The medium-latency property Loopix allows for both low-latency applications such as instant messaging and high-latency applications such as email. A feature of Loopix is the ability to store messages for offline clients. This is helpful for peer-to-peer communications when clients such as mobile devices may not be online simultaneously.
 
 \section{Related Work}
 
-\subsection{Mix Networks and Onion Routing}
+Anonymous communication systems can be broadly categorised under connection-based onion routing or message-based mix networks. The most popular architectures are those of onion routing such as Tor, with various systems extending this paradigm. Message-based mix networks such as Mixminion \cite{danezis2003mixminion}, of which Loopix is loosely based upon, on the other hand, are considered unfashionable due to the high-latencies involved.
+
+The many different anonymous communication systems show how difficult it is to design an anonymous communication system with acceptable tradeoffs for many different applications. Some require many clients to provide anonymity, which ends up in a chicken and egg situation. Loopix attempts to cater for medium to high latency applications such as instant messaging and email, and not target very low latency applications such as web browsing. Loopix's parameters can also be adjusted according to the number of participating users to maintain anonymity even when there are very few users.
+
+The Loopix authors have already completed a rigorous analysis of Loopix and have a working implementation in Python. This meant I was able to use the similar evaluation methodologies to the original paper, and the open source Python implementation was crucial in developing my own implementation.
+
+Loopix has since been worked on and improved by the PANORAMIX project, and the end result is a more robust mix network Katzenpost\footnote{https://katzenpost.mixnetworks.org/}. Katzenpost is based on Loopix, and adds a consensus-based public key infrastructure, reliable message delivery, and single-use replies.
 
 \end{document}

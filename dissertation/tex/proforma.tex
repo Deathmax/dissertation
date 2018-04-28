@@ -10,25 +10,26 @@
 		Name:               & \bf Jun Siang Cheah                               \\
 		College:            & \bf Christ's College                              \\
 		Project Title:      & \bf An implementation and evaluation of Loopix,   \\ 
-		& \bf an anonymous communication system             \\
+		& \bf an anonymous communication system                                 \\
 		Examination:        & \bf Computer Science Tripos -- Part II, July 2018 \\
-		Word Count:         & \bf ???                                           \\
+		Word Count:         & \bf 8604\footnotemark                              \\
 		Project Originator: & Dr Alastair Beresford                             \\
 		Supervisor:         & Dr Alastair Beresford                             \\ 
 	\end{tabular}
 }
-\footnotetext[1]{This word count was computed
-	by \texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
-}
-\stepcounter{footnote}
 
+\footnotetext{Computed using \verb|perl texcount.pl -total *.tex|}
 
 \section*{Original Aims of the Project}
 
+The original aims of the project, as set out in the proposal, was the implementation and evaluation of a Java Loopix client. This includes a Java Sphinx library, and a demonstration application built using the Loopix client library. The libraries were to be binary compatible the existing Python implementation. The library and the Loopix network was to be evaluated by measuring various metrics such as bandwidth and latency overheads.
 
 \section*{Work Completed}
 
+I have created a working, binary compatible Loopix client in Java, with a corresponding Java Sphinx library. I also measured the performance of my client in terms of bandwidth and latency overhead. I also analysed the viability of using Loopix on mobile devices.
 
 \section*{Special Difficulties}
+
+None
 
 \end{document}

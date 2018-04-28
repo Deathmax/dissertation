@@ -7,4 +7,12 @@
 
 \chapter{Conclusion}
 
+This chapter concludes my dissertation, with successful results. I have fulfilled all of my success criteria and produced an implementation and evaluation of Loopix in Java. I have produced a Sphinx library, a Loopix client library, a chat demo application, and a testing framework for running and measuring metrics of a test network. The libraries produced are binary compatible with the Python implementations.
+
+The bandwidth overhead results reproduced similar scaling to the results in the Loopix paper, and I pushed the network even further demonstrating the existence of bottlenecks and the behaviour of the system under load. The latency results showed that my implementation was slower than the original implementation, but it was still within acceptable limits.
+
+The mobile device viability analysis produced interesting results. Some bandwidth and energy overhead was expected, however when tuned for low latency Loopix is not viable for mobile devices, and perhaps even some desktop applications. This showed the importance of tuning Loopix for specific applications, and in general making appropriate tradeoffs in system design for a specific application. For example, Tor is not resistant to traffic analysis, but it gains low-latency communication with a very small bandwidth overhead making it suitable for near real-time applications like web browsing.
+
+A lot of further work to improve Loopix has already been achieved by the Katzenpost mix network, which improves upon Loopix by introducing reliable transport through the use of acknowledgements, a consensus-based public key infrastructure, and the use of modern ciphers and hashes.
+
 \end{document}

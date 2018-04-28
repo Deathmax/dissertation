@@ -25,14 +25,24 @@
 % only needed to allow inclusion of proposal.tex
 \usepackage{docmute}
 
+% for SI units
+\usepackage[binary-units=true]{siunitx}
+
 % modular document
 \usepackage{subfiles}
 
- % try to avoid widows and orphans
+% try to avoid widows and orphans
 \raggedbottom 
 \sloppy
-\clubpenalty1000%
-\widowpenalty1000%
+\clubpenalty10000
+\widowpenalty10000
 
 % adjust line spacing to make more readable
 \renewcommand{\baselinestretch}{1.1}
+
+% increase section depth
+\setcounter{secnumdepth}{3}
+
+\usepackage{parskip}
+
+\usepackage[british]{babel}
