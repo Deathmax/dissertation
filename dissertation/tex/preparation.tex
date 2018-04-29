@@ -53,7 +53,7 @@ As this input process is a Poisson process, and each message is independently de
 
 \section{Requirements Analysis}
 
-The project requires that a Java implementation of Loopix be produced. The project can be broken down into four parts:
+The project requires that an implementation and evaluation of Loopix be produced. Java is chosen as the language of choice for the library, and graph generation will be done with Python. The project can be broken down into four parts:
 
 \begin{itemize}
 	\item \textbf{Sphinx library} - The packet format used by Loopix. There was an existing Scala implementation\footnote{https://github.com/ndavison21/ScalaSphinx} created as part of a Part II project, but that implementation was incompatible the Python library.
@@ -76,39 +76,29 @@ Each curve used in ECC has a base point which is the group generator $G$. Privat
 
 $$G^x = \underbrace{G + G + \cdots + G}_{x \text{ times}}$$.
 
-It is possible to use ECC to perform Diffie-Hellman key exchange as a result of the associativity of multiplication in a finite field. Loopix uses Ephemeral Elliptic-Curve Diffie-Hellman (ECDHE) key exchange for generating shared secrets. Consider two parties, Alice and Bob. Both Alice and Bob generate a public-private key-pair $PK_A$, $SK_A$ and $PK_B$, $SK_B$ respectively and share their public keys. Bob receive's Alice's public key $PK_A$, which is of the form $PK_A = G^{SK_A}$. Bob generates a shared key by exponentiating Alice's public key with his private key $(G^{SK_A})^{SK_B}$. Alice does the same  with Bob's public key $(G^{SK_B})^{SK_A}$. From the associativity of multiplication in a finite field, these two are equal.
+It is possible to use ECC to perform Diffie-Hellman key exchange as a result of the associativity of multiplication in a finite field. Loopix uses Ephemeral Elliptic-Curve Diffie-Hellman (ECDHE) key exchange for generating shared secrets. Consider two parties, Alice and Bob. Both Alice and Bob generate a public-private key-pair $PK_A$, $SK_A$ and $PK_B$, $SK_B$ respectively and share their public keys. Bob receive's Alice's public key $PK_A$, which is of the form $PK_A = G^{SK_A}$. Bob generates a shared key by exponentiating Alice's public key with his private key $(G^{SK_A})^{SK_B}$. Alice does the same with Bob's public key $(G^{SK_B})^{SK_A}$. From the associativity of multiplication in a finite field, these two are equal, that is:
 
-For an attacker to recover $(G^{SK_A})^{SK_B}$ from only $G^{SK_A}$ and $G^{SK_B}$, the two messages that are known to observers requires solving the computational Diffie-Hellman problem, which is believed to be computationally hard.
+$$(G^{SK_A})^{SK_B} = (G^{SK_B})^{SK_A} = G^{SK_A*SK_B}$$
+
+For an attacker to recover $G^{SK_A*SK_B}$ from only $G^{SK_A}$ and $G^{SK_B}$, the two messages that are sent over an unsecure channel and known to adversaries requires solving the computational Diffie-Hellman problem, which is believed to be computationally hard.
 
 With ECDHE, a random key-pair is generated for each communication session instead of using static keys. This provides forward secrecy and prevents attackers from decrypting other communications when a previous key is compromised.
 
 \subsection{LIONESS Wide Block Cipher}
 
-LIONESS is a provably secure wide block cipher \cite{anderson1996two}. It is parametrised with a stream cipher (AES-128-CTR) and a hash function (SHA256). LIONESS supports arbitrary sized blocks, such that the whole message is treated as a single block. This ensures that any change in the ciphertext would prevent the decryption of the ciphertext. This prevents the tagging of encrypted messages as LIONESS is not homomorphic.
+LIONESS is a provably secure wide block cipher \cite{anderson1996two}. It is parametrised with a stream cipher (AES-128-CTR) and a hash function (SHA-256). LIONESS supports arbitrary sized blocks, such that the whole message is treated as a single block. This ensures that any change in the ciphertext would prevent the decryption of the ciphertext. This prevents the tagging of encrypted messages as LIONESS is not homomorphic.
 
-Internally, LIONESS is a four round unbalanced Feistel cipher. As such, the encryption operation $\text{LIONESS\_ENCRYPT}(K, M)$ is described as:
+Internally, LIONESS is a four round unbalanced Feistel cipher, the structure of which is shown in Figure~\ref{fig:lioness_feistel}. LIONESS is supposed to take as inputs 4 rounds keys $K_1, K_2, K_3, K_4$, each the length of the hash function output. However, this project uses a variant of LIONESS that takes a single key $K$ and derives from $K$ and the plaintext the required round keys.
 
-\begin{align*}
-H_K(M) &= \text{SHA-256}(M\|K)\text{[0:128]} \\
-S_K(M, I) &= \text{AES}(K, M, I) \\
-L &= M\text{[0:128]} \\
-R &= M\text{[128:]}  \\
-% round 1
-K_1 &= H_K(R) \\
-L &= S_K(R, K_1) \\
-% round 2
-R &= S_K(R, L) \\
-% round 3
-K_3 &= H_K(R) \\
-L &= S_K(L, K_3) \\
-% round 4
-R &= S_K(R, L) \\
-C &= L\|R
-\end{align*}
+\begin{figure}[h]
+	\includegraphics[width=\linewidth]{../figs/lioness_feistel}
+	\caption{Feistel network of LIONESS encryption and decryption operations. $S_K$ is a stream cipher keyed using $K$, and $H_K$ is a hash function keyed using $K$.}
+	\label{fig:lioness_feistel}
+\end{figure}
 
 \section{Development Tools}
 
-A good development environment is essential to productivity. For Java development, the IntelliJ IDEA IDE is used,  with the Gradle build system and JUnit for unit tests. Gradle helps with dependency management as well. The Travis CI service is used to run tests on commit to the Git repository. Visual Studio Code is used for writing any Python and shell scripts. Both IDEs provide syntax highlighting, code auto-completion, and code analysis to increase productivity.
+A good development environment is essential to productivity. For Java development, the IntelliJ IDEA IDE is used,  with the Gradle build system and JUnit for unit tests. Gradle handles dependency management as well. The Travis CI service is used to run tests on commit to the Git repository. Visual Studio Code is used for writing any Python and shell scripts. Both IDEs provide syntax highlighting, code auto-completion, and code analysis to increase productivity.
 
 Revision control is managed using Git, with remote repositories hosted on GitHub, Bitbucket, and my server to serve as backups. Secondary backups are done by periodically syncing the project repository onto Dropbox and Google Drive.
 
@@ -118,33 +108,17 @@ Docker containers are used to package both Java and Python Loopix applications. 
 
 Many existing libraries are used to avoid reimplementing code that is already available, and some are dependencies as a result of the original implementation using a particular package.
 
-\subsection{Python Loopix Library}
-
-The existing \verb|loopix| Python package is referenced for implementation details. It is also used for running parts of the test network, such as providers, mix nodes and clients. This package also makes use of the \verb|sphinxmix| package, which is also referenced when implementing my Sphinx library. These are licensed under the LGPL-3.0 license.
-
-\subsection{Bouncy Castle}
-\label{sec:bouncy}
-
-Bouncy Castle is a Java library that provides a cryptography API, with support for various primitives such as AES, SHA, HMAC, and elliptic curves. Bouncy Castle was chosen for easier portability between clients which may not have the official Java cryptography extension installed. Reusing a well-maintained cryptography library is crucial, as implementing my own cryptographic functions properly is difficult, as vulnerabilities such as timing attacks are very easy to introduce. Bouncy Castle is licensed under the MIT license.
-
-\subsection{MessagePack}
-
-MessagePack (\verb|msgpack|) is an efficient binary serialisation format that is extensively used by the Python Loopix and Sphinx libraries. The Java library \verb|msgpack-core| is used for my project. Unlike other serialisation libraries, it does not support serialisation of Plain Old Java Objects, which adds complexity to the usage of the library. \verb|msgpack-core| is licensed under the Apache-2.0 license.
-
-\subsection{Apache MINA}
-
-Apache MINA is an event-driven asynchronous networking library. This is used to simplify working with network sockets since the library handles threading and state management and exposes a simple send and receive interface. MINA is licensed under the Apache-2.0 license.
-
-\subsection{JUnit}
-
-JUnit is a testing library for Java. It is used to support the test-driven development method by allowing the writing and execution of unit tests. JUnit is licensed under the Eclipse Public License.
-
-\subsection{SQLite}
-
-\verb|sqlite-jdbc| is a library for interacting with SQLite databases, which are used in Loopix to hold network information. It is licensed under the Apache-2.0 license.
+\begin{itemize}
+	\item \textbf{Python Loopix and Sphinx libraries} - The existing \verb|loopix| Python package is referenced for implementation details. It is also used for running parts of the test network, such as providers, mix nodes and clients. This package also makes use of the \verb|sphinxmix| package, which is also referenced when implementing my Sphinx library. \verb|loopix| and \verb|sphinxmix| are licensed under the LGPL-3.0 license.
+	\item \textbf{Bouncy Castle} - Bouncy Castle is a Java library that provides a cryptography API, with support for various primitives such as AES, SHA, HMAC, and elliptic curves. Bouncy Castle was chosen for easier portability between clients which may not have the official Java cryptography extension installed. Reusing a well-maintained cryptography library is crucial, as implementing my own cryptographic functions properly is difficult, as vulnerabilities such as timing attacks are very easy to introduce. Bouncy Castle is licensed under the MIT license.
+	\item \textbf{MessagePack} - MessagePack (\verb|msgpack|) is an efficient binary serialisation format that is extensively used by the Python Loopix and Sphinx libraries. The Java library \verb|msgpack-core| is used for my project. Unlike other serialisation libraries, it does not support serialisation of Plain Old Java Objects, which adds complexity to the usage of the library. \verb|msgpack-core| is licensed under the Apache-2.0 license.
+	\item \textbf{Apache MINA} - Apache MINA is an event-driven asynchronous networking library. This is used to simplify working with network sockets since the library handles threading and state management and exposes a simple send and receive interface. MINA is licensed under the Apache-2.0 license.
+	\item \textbf{JUnit} - JUnit is a testing library for Java. It is used to support the test-driven development method by allowing the writing and execution of unit tests. JUnit is licensed under the Eclipse Public License.
+	\item \textbf{SQLite} - \verb|sqlite-jdbc| is a library for interacting with SQLite databases, which are used in Loopix to hold network information. It is licensed under the Apache-2.0 license.
+\end{itemize}
 
 \section{Software Engineering Techniques}
 
-As binary compatibility is important, test-driven development is adopted to ensure my implementation is generating identical output to the Python implementation. This is done by generating test cases using the Python code and using unit tests to compare the output from the Java code. The test cases also include decoding output from the Python implementation. Changes are then made until the tests pass. 
+As binary compatibility is important, test-driven development is adopted to ensure my implementation is generating identical output to the Python implementation. This is done by generating test cases using the Python code and using unit tests to compare the output from the Java code. The test cases also include decoding output from the Python implementation. Changes are then made until the tests pass. This also ensures that any changes that causes regressions will be caught by the unit tests.
 
 \end{document}
