@@ -24,7 +24,29 @@
 
 \chapter{Preparation}
 
-This chapter begins by providing a high-level overview of how Loopix is structured, a background into some of the cryptography, and details about the development environment and software engineering techniques used.
+This chapter begins by providing Loopix's threat model, providing a high-level overview of how Loopix is structured, a background into some of the cryptography, and details about the development environment and software engineering techniques used.
+
+\section{Threat Model}
+
+Loopix's threat model assumes adversaries that are well-resourced and concerned with linking users to their communications, or their partners. Such adversaries are envisioned to have three capabilities:
+
+\begin{itemize}
+	\item \textbf{Global Passive Adversary (GPA)} A GPA is able to observe all network traffic in the system, and thus all information flowing between nodes.
+	\item \textbf{Corrupt Mix Nodes/Providers} The adversary has the ability to compromise and corrupt mix nodes, or run malicious mix nodes. Such a mix node may tamper with messages by dropping or delaying messages. It may also inject messages into the system. The adversary also has access to all of the secrets associated with the nodes.
+	\item \textbf{Insider} The ability to participate in the system as a user, and may deviate from the protocol. This is extended to assume the adversary is able to participate in a conversation with an honest user, and thus become a conversation insider.
+\end{itemize}
+
+Loopix attempts to provide the following security properties:
+
+\begin{itemize}
+	\item \textbf{Sender-receiver third-party unlinkability} An adversary should not be able to infer that two users are communicating.
+	\item \textbf{Sender online unobservability} An adversary should not be able to infer that a sender is actively communicating.
+	\item \textbf{Sender anonymity} An adversary should not be able to distinguish between two possible senders communicating with a receiver.
+	\item \textbf{Receiver unobservability} An adversary should not be able to infer that a receiver is actively communicating.
+	\item \textbf{Receiver anonymity} An adversary should not be able to distinguish between two possible receivers communicating with a sender.
+\end{itemize}
+
+Loopix provides these properties against GPAs and corrupt mixes. However, a corrupt provider will be able to determine if a receiver registered under it is actively sending and/or receiving messages.
 
 \section{Structure of Loopix}
 
@@ -39,7 +61,7 @@ In this section, I describe the Loopix network architecture and the Poisson Mix 
 
 The Loopix network is composed of three parts: clients, mix nodes and providers. A client can communicate through the Loopix network and can act as a sender and receiver of messages. Each entity in the Loopix network has a unique public-private key pair that is used to encrypt and decrypt messages. The mix nodes are separated into layers, with each layer forwarding messages to the next layer. 
 
-For a sender to send a message to a receiver, the sender needs to know the receiver's Loopix network location, that is the IP address of the receiver's provider, an identifier of the user, and the receiver's public encryption key. The sender also needs to know the network locations of intermediate mix nodes as the sender is responsible for selecting the route through the network.
+For a sender to send a message to a receiver, the sender needs to know the receiver's Loopix network location, that is, the IP address of the receiver's provider, an identifier of the user, and the receiver's public encryption key. The sender also needs to know the network locations of intermediate mix nodes as Loopix is source routed and thus the sender is responsible for selecting the route through the network.
 
 \subsection{Poisson Mix}
 
@@ -51,15 +73,17 @@ Since honest nodes generate cover traffic, loop traffic, and real traffic follow
 
 As this input process is a Poisson process, and each message is independently delayed using an exponential distribution with parameter $\lambda$, a Poisson Mix can be modelled as an $M/M/\infty$ queueing system since both input and output of the mix node are Poisson processes. As a result of the memoryless property of such a system, messages are indistinguishable from each other, since messages are emitted with equal probability regardless of the amount of time they have been waiting in the queue.
 
+This provides the strong anonymity properties of the system, including a defence against a global passive adversary.
+
 \section{Requirements Analysis}
 
 The project requires that an implementation and evaluation of Loopix be produced. Java is chosen as the language of choice for the library, and graph generation will be done with Python. The project can be broken down into four parts:
 
 \begin{itemize}
-	\item \textbf{Sphinx library} - The packet format used by Loopix. There was an existing Scala implementation\footnote{https://github.com/ndavison21/ScalaSphinx} created as part of a Part II project, but that implementation was incompatible the Python library.
-	\item \textbf{Loopix client} - The client handles communication with the network and generating traffic using the Poisson mix strategy. 
-	\item \textbf{Demonstration application} - Any application that uses the client for communication, such as instant messaging or email.
-	\item \textbf{Test framework} - A framework for testing my libraries, with respect to functionality and performance.
+	\item \textbf{Sphinx library} The packet format used by Loopix. There was an existing Scala implementation\footnote{https://github.com/ndavison21/ScalaSphinx} created as part of a Part II project, but that implementation was incompatible with the Python library.
+	\item \textbf{Loopix client} The client handles communication with the network and generating traffic using the Poisson mix strategy. 
+	\item \textbf{Demonstration application} Any application that uses the client for communication, such as instant messaging or email.
+	\item \textbf{Test framework} A framework for testing my libraries, with respect to correctness and performance.
 \end{itemize}
 
 As there is already an implementation of Loopix, and binary compatibility is required, I have to refer to the behaviour of the implementation rather than the paper. This is because the paper does not describe sufficient implementation detail.
@@ -68,25 +92,95 @@ The choice of Java is a result of the aim of getting Loopix on Android devices. 
 
 \section{Cryptography}
 
+Loopix makes use of elliptic curve cryptography for exchanging keys using the Diffie-Hellman protocol and the LIONESS block cipher for encrypting messages.
+
 \subsection{Elliptic Curves}
 
-Elliptic curve cryptography (ECC) is used in public-key cryptography. ECC is based on elliptic curves groups, which are sets of 2D coordinates $(x, y)$ of the form $y^2 = x^3 + Ax + B$ and an additional point at infinity. The key group operation addition $P_1 + P_2$ is defined as: draw a line through $P_1, P_2$, and the line should intersect the curve at a third point $P_3$. Negate the y coordinate of $P_3$ to get $P_1 + P_2$.
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}[scale=.75]
+	\begin{scope}
+	\plotcurve{-2}{2}
+	\draw[->, >=latex, thick] (-2.5,-1) -- ++(0,3.5) node[right] {$\mathcal{O}$};
+	\end{scope}
+	\end{tikzpicture}
+	\caption{An elliptic curve with parameters $A=-2$ and $B=2$, with the neutral element $\mathcal{O}$ at infinity.}
+	\label{fig:ec_curve}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[scale=.75]
+\begin{scope}
+\plotcurve{-2}{2}
+\draw[thick, name path=chord] (-2.5,.5) -- (2.5,2.0);
+\draw[name intersections={of=curve and chord}] (intersection-1) node {$\bullet$} node[above left] {$P_1$}
+(intersection-2) node {$\bullet$} node[above right=-1pt] {$P_2$}
+(intersection-3) node {$\bullet$} coordinate[name=mPQ];
+\draw[dashed, semithick, name path=vertical] (mPQ) ++(0,1) -- +(0,-5.5);
+\draw[name intersections={of=curve and vertical}] (intersection-2) node {$\bullet$} node[below left] {$P_1+P_2$};
+\end{scope}
+\end{tikzpicture}
+\caption{The addition of points $P_1$ and $P_2$.}
+\label{fig:ec_addition}
+\end{figure}
+
+Elliptic curve cryptography (ECC) is used in public-key cryptography. ECC is based on elliptic curves groups, which are sets of 2D coordinates $(x, y)$ of the form $y^2 = x^3 + Ax + B$ and an additional point $\mathcal{O}$ at infinity with an example shown in Figure~\ref{fig:ec_curve}. The key group operation addition $P_1 + P_2$ is defined as: draw a line through $P_1, P_2$, and the line should intersect the curve at a third point $P_3$. Negate the y coordinate of $P_3$ to get $P_1 + P_2$. The addition operation is illustrated in Figure~\ref{fig:ec_addition}
 
 Each curve used in ECC has a base point which is the group generator $G$. Private keys are a random integer $x$, and the corresponding public key is given by 
 
 $$G^x = \underbrace{G + G + \cdots + G}_{x \text{ times}}$$.
 
-It is possible to use ECC to perform Diffie-Hellman key exchange as a result of the associativity of multiplication in a finite field. Loopix uses Ephemeral Elliptic-Curve Diffie-Hellman (ECDHE) key exchange for generating shared secrets. Consider two parties, Alice and Bob. Both Alice and Bob generate a public-private key-pair $PK_A$, $SK_A$ and $PK_B$, $SK_B$ respectively and share their public keys. Bob receive's Alice's public key $PK_A$, which is of the form $PK_A = G^{SK_A}$. Bob generates a shared key by exponentiating Alice's public key with his private key $(G^{SK_A})^{SK_B}$. Alice does the same with Bob's public key $(G^{SK_B})^{SK_A}$. From the associativity of multiplication in a finite field, these two are equal, that is:
+ECC can be used to perform Diffie-Hellman key exchange to share secrets over a public communication channel without revealing the secret to an observer.
+
+Consider two parties, Alice and Bob. Both Alice and Bob generate a public-private key-pair $PK_A$, $SK_A$ and $PK_B$, $SK_B$ respectively and share their public keys.
+
+Bob receives Alice's public key $PK_A$, which is of the form $PK_A = G^{SK_A}$. Bob generates a shared key by exponentiating Alice's public key with his private key $(G^{SK_A})^{SK_B}$. Alice does the same with Bob's public key $(G^{SK_B})^{SK_A}$. From the associativity of multiplication in a finite field, these two are equal, that is:
 
 $$(G^{SK_A})^{SK_B} = (G^{SK_B})^{SK_A} = G^{SK_A*SK_B}$$
 
-For an attacker to recover $G^{SK_A*SK_B}$ from only $G^{SK_A}$ and $G^{SK_B}$, the two messages that are sent over an unsecure channel and known to adversaries requires solving the computational Diffie-Hellman problem, which is believed to be computationally hard.
+The Diffie-Hellman protocol is illustrated in Figure~\ref{fig:dhe}.
 
-With ECDHE, a random key-pair is generated for each communication session instead of using static keys. This provides forward secrecy and prevents attackers from decrypting other communications when a previous key is compromised.
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}
+% Public parameter:
+\node[draw=none,fill=none,align=center] (public) at (0,1) {Public generator: $G$};
+
+% Alice
+\node[draw] (Alice) at (-2,0) {Alice}; 
+\draw[thick] (Alice) -- ++(0, -4);
+
+% Calculations of Alice
+\node[draw=none,fill=none,anchor=east] (asecret) at ($(Alice) + (0,-1)$) {$SK_A \in R$};
+\node[draw=none,fill=none,anchor=east] (Apublic) at ($(Alice) + (0,-2)$) {$A = PK_A = G^{SK_A}$};
+\node[draw=none,fill=none,anchor=east] (akey) at ($(Alice) + (0,-4)$) {$K = (B)^{SK_A} = g^{SK_A*SK_B}$};
+
+% Bob
+\node[draw] (Bob) at (2,0) {Bob}; 
+\draw[thick] (Bob) -- ++(0, -4);
+
+% Calculations of Bob
+\node[draw=none,fill=none,anchor=west] (bsecret) at ($(Bob) + (0,-1)$) {$SK_B \in R$};
+\node[draw=none,fill=none,anchor=west] (Bpublic) at ($(Bob) + (0,-2)$) {$B = PK_B = G^{SK_B}$};
+\node[draw=none,fill=none,anchor=west] (bkey) at ($(Bob) + (0,-4)$) {$K = (A)^{SK_B} = G^{SK_A*SK_B}$};
+
+% Messages
+\draw[->,thick] ($(Alice)+(0,-2)$) -- ($(Bob)+(0,-2.5)$) node [pos=0.5,above,font=\footnotesize] {A};
+\draw[->,thick] ($(Bob)+(0,-3)$) -- ($(Alice)+(0,-3.5)$) node [pos=0.5,above,font=\footnotesize] {B};
+
+\end{tikzpicture}
+\caption{The Elliptic-Curve Diffie-Hellman protocol.}
+\label{fig:dhe}
+\end{figure}
+
+For an attacker to recover $G^{SK_A*SK_B}$ from only $G^{SK_A}$ and $G^{SK_B}$, the two messages that are sent over a public channel and known to adversaries requires solving the computational Diffie-Hellman problem, which is believed to be computationally hard.
+
+Loopix generates a random \textit{blinding factor} $b$ for establishing a shared secret key between two parties. The blinding factor is treated as the private key of one party, and $G^b$ is the public key that is sent over the network.
 
 \subsection{LIONESS Wide Block Cipher}
 
-LIONESS is a provably secure wide block cipher \cite{anderson1996two}. It is parametrised with a stream cipher (AES-128-CTR) and a hash function (SHA-256). LIONESS supports arbitrary sized blocks, such that the whole message is treated as a single block. This ensures that any change in the ciphertext would prevent the decryption of the ciphertext. This prevents the tagging of encrypted messages as LIONESS is not homomorphic.
+LIONESS is a provably secure wide block cipher \cite{anderson1996two}. It is parametrised with a stream cipher (AES-128-CTR) and a hash function (SHA-256). LIONESS supports arbitrary sized blocks, such that the whole message is treated as a single block. This ensures that any change in the ciphertext would prevent the decryption of the ciphertext. This prevents the tagging of encrypted messages, where an attacker is able to modify the ciphertext and observe the same modification in the plaintext. The tagging attack can be used to recognise specific traffic in the network.
 
 Internally, LIONESS is a four round unbalanced Feistel cipher, the structure of which is shown in Figure~\ref{fig:lioness_feistel}. LIONESS is supposed to take as inputs 4 rounds keys $K_1, K_2, K_3, K_4$, each the length of the hash function output. However, this project uses a variant of LIONESS that takes a single key $K$ and derives from $K$ and the plaintext the required round keys.
 
@@ -98,11 +192,11 @@ Internally, LIONESS is a four round unbalanced Feistel cipher, the structure of 
 
 \section{Development Tools}
 
-A good development environment is essential to productivity. For Java development, the IntelliJ IDEA IDE is used,  with the Gradle build system and JUnit for unit tests. Gradle handles dependency management as well. The Travis CI service is used to run tests on commit to the Git repository. Visual Studio Code is used for writing any Python and shell scripts. Both IDEs provide syntax highlighting, code auto-completion, and code analysis to increase productivity.
+A good development environment is essential to productivity. For Java development, the IntelliJ IDEA IDE is used, with the Gradle build system and JUnit for unit tests. Gradle handles dependency management as well. Travis CI is a service that automatically builds projects and is used to run tests on commit to the Git repository. This ensures code committed to the Git repository can be compiled and passes all tests. Visual Studio Code is used for writing any Python and shell scripts. Both IDEs provide syntax highlighting, code auto-completion, and code analysis to increase productivity.
 
 Revision control is managed using Git, with remote repositories hosted on GitHub, Bitbucket, and my server to serve as backups. Secondary backups are done by periodically syncing the project repository onto Dropbox and Google Drive.
 
-Docker containers are used to package both Java and Python Loopix applications. Doing this simplifies orchestration of running a test network, and it is simple to swap out a Python client for my client into the network to test. Using Docker containers also simplifies the deployment of the test network on other machines, as I would need to run the tests on a well-equipped server, and containers have dependencies built in that solves many issues.
+Docker containers are used to package both Java and Python Loopix applications. As I need the ability to run the network both on my computer and a well-equipped server, Docker is used to enable reproducibility. This is because the containers contain all the dependencies necessary to run the applications and will behave identically on different machines regardless of the environment. Docker also simplifies orchestration of running a test network, as each container is isolated from each other. This is particularly important with the Python implementation, as each instance requires a separate working directory which is not necessary when encapsulated inside a container. It is simple to swap out a different implementations into the network to test by simply replacing an argument to \verb|docker run|.
 
 \section{Existing Libraries}
 
@@ -119,6 +213,6 @@ Many existing libraries are used to avoid reimplementing code that is already av
 
 \section{Software Engineering Techniques}
 
-As binary compatibility is important, test-driven development is adopted to ensure my implementation is generating identical output to the Python implementation. This is done by generating test cases using the Python code and using unit tests to compare the output from the Java code. The test cases also include decoding output from the Python implementation. Changes are then made until the tests pass. This also ensures that any changes that causes regressions will be caught by the unit tests.
+As binary compatibility is important, test-driven development is adopted to ensure my implementation is generating identical output to the Python implementation. This is done by generating test cases using the Python code and using unit tests to compare the output from the Java code. The test cases also include decoding output from the Python implementation. Changes are then made until the tests pass. This also ensures that any changes would cause regressions will be caught by the unit tests.
 
 \end{document}

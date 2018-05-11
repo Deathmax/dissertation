@@ -12,21 +12,25 @@
 		Project Title:      & \bf An implementation and evaluation of Loopix,   \\ 
 		& \bf an anonymous communication system                                 \\
 		Examination:        & \bf Computer Science Tripos -- Part II, July 2018 \\
-		Word Count:         & \bf 8604\footnotemark                              \\
+		Word Count:         & \bf 10203\footnotemark                              \\
 		Project Originator: & Dr Alastair Beresford                             \\
 		Supervisor:         & Dr Alastair Beresford                             \\ 
 	\end{tabular}
 }
 
-\footnotetext{Computed using \verb|perl texcount.pl -total *.tex|}
+\footnotetext{Computed using \verb|perl texcount.pl -total chapter_{1,2,3,4,5}.tex| from \href{http://app.uio.no/ifi/texcount/}{http://app.uio.no/ifi/texcount/}}
 
 \section*{Original Aims of the Project}
 
-The original aims of the project, as set out in the proposal, was the implementation and evaluation of a Java Loopix client. This includes a Java Sphinx library, and a demonstration application built using the Loopix client library. The libraries were to be binary compatible the existing Python implementation. The library and the Loopix network was to be evaluated by measuring various metrics such as bandwidth and latency overheads.
+% What is Loopix, background
+
+Loopix is a communication system that allows users to anonymously communicate, without revealing that two users are communicating. This project aimed to implement a Loopix client library in Java, and a demonstration application running on top of the library. The implementation was to be evaluated in terms of various performance metrics such as latency and bandwidth overheads.
 
 \section*{Work Completed}
 
-I have created a working, binary compatible Loopix client in Java, with a corresponding Java Sphinx library. I also measured the performance of my client in terms of bandwidth and latency overhead. I also analysed the viability of using Loopix on mobile devices.
+% Sell it better, more numbers
+
+I have created a working, binary compatible Loopix client in Java. A latency overhead due to processing of about \SI{20}{\milli\second} was measured. This is faster than the Python implementation by \SI{2}{\milli\second}. I have also analysed the viability of running a Loopix client on mobile devices, with results showing the trade-off between delays necessary for maintaining anonymity and resource usage such as bandwidth and battery usage may be too large to reconcile for many applications.
 
 \section*{Special Difficulties}
 

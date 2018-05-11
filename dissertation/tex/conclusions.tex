@@ -7,12 +7,18 @@
 
 \chapter{Conclusion}
 
-This chapter concludes my dissertation, with successful results. I have fulfilled all of my success criteria and produced an implementation and evaluation of Loopix in Java. I have produced a Sphinx library, a Loopix client library, a chat demo application, and a testing framework for running and measuring metrics of a test network. The libraries produced are binary compatible with the Python implementations.
+I have fulfilled all of my success criteria and produced an implementation and evaluation of Loopix in Java. I have produced a Sphinx library, a Loopix client library, a chat demo application, and a testing framework for running and measuring metrics of a test network. The libraries produced are binary compatible with the Python implementations.
 
-The bandwidth overhead results reproduced similar scaling to the results in the Loopix paper, and I pushed the network even further demonstrating the existence of bottlenecks and the behaviour of the system under load. The latency results showed that my implementation was slower than the original implementation, but it was still within acceptable limits.
+The bandwidth overhead results reproduced similar scaling to the results in the Loopix paper, and I pushed the network even further, demonstrating the existence of bottlenecks and the behaviour of the system under load. The latency results showed that my implementation was slightly faster than the original implementation, but with differing results compared to the Loopix paper \cite{piotrowska2017loopix}.
 
-The mobile device viability analysis produced interesting results. Some bandwidth and energy overhead was expected, however when tuned for low latency Loopix is not viable for mobile devices, and perhaps even some desktop applications. This showed the importance of tuning Loopix for specific applications, and in general making appropriate tradeoffs in system design for a specific application. For example, Tor is not resistant to traffic analysis, but it gains low-latency communication with a very small bandwidth overhead making it suitable for near real-time applications like web browsing.
+The mobile device viability analysis produced interesting results. Some bandwidth and energy overhead was expected, however when tuned for low latency Loopix is not viable for mobile devices, and perhaps even some desktop applications. This shows that even though Loopix was designed for a tunable trade-off between latency and bandwidth, the trade-offs may be too large for certain applications. Thus on mobile devices, Loopix is better suited for delay-tolerant applications such as email, notes/to-do lists, and peer-to-peer hosted blogs.
 
-A lot of further work to improve Loopix has already been achieved by the Katzenpost mix network, which improves upon Loopix by introducing reliable transport through the use of acknowledgements, a consensus-based public key infrastructure, and the use of modern ciphers and hashes.
+\section{Further Work}
+
+Further work on Loopix has already started with the Katzenpost project\footnote{\url{https://katzenpost.mixnetworks.org}}. Katzenpost is a mix network built on top of Loopix, which improves upon Loopix by introducing reliable transport through the use of acknowledgements, a consensus-based public key infrastructure, and the use of modern ciphers and hashes. 
+
+As Katzenpost suffers from the same issues of poor viability on mobile devices, further work could be done by analysing the anonymity impact of various approaches to conserving resources on mobile devices, such as the strategy of only sending cover traffic when the application is actively running in the foreground of the device.
+
+Further work could be done with dynamically adjusting the various network parameters such as cover traffic send rates based on the state of the network, as less cover traffic is needed when there are more users in the network. This would allow for the automatic optimisation of bandwidth overhead needed to maintain anonymity.
 
 \end{document}
