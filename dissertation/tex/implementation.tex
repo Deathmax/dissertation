@@ -371,7 +371,7 @@ Preferably, the hostname would be replaced with an IP address. This would avoid 
 
 %It is not strictly necessary for the database to contain a user's network location, and is detrimental to both security and usability of the network. Only the provider needs to know the user's network location, and as part of the Loopix network protocol the user will register with the provider. This allows the provider to discover the user's network location. The current scheme would expose a user's network location, and allow adversaries to track a user moving from network to network. There is the additional issue of NAT traversal not preserving port numbers, as users behind a NAT is unable to receive packets without first establishing a connection to the provider, but the public port may differ from the private source port.
 
-The \verb|ECPoint| data type is encoded using the scheme described in section \ref{sec:serialisation} and stored as a binary blob in the database.
+The \verb|ECPoint| data type is encoded using the scheme described in Section~\ref{sec:serialisation} and stored as a binary blob in the database.
 
 Reading from the database is done using the \verb|sqlite-jdbc| library and the corresponding Java Database Connectivity (JDBC)
 API built into Java. On start, the library will read and cache information on all mix nodes and the user's provider in memory to speed up lookups for path selection. SQL queries are used to lookup destination users and their provider. Optimally information on all users and providers are cached in memory as well, but this fails to scale as the number of users and providers are expected to be much larger than the number of mix nodes.

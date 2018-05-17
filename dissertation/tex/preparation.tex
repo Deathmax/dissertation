@@ -125,7 +125,7 @@ Loopix makes use of elliptic curve cryptography for exchanging keys using the Di
 \label{fig:ec_addition}
 \end{figure}
 
-Elliptic curve cryptography (ECC) is used in public-key cryptography. ECC is based on elliptic curves groups, which are sets of 2D coordinates $(x, y)$ of the form $y^2 = x^3 + Ax + B$ and an additional point $\mathcal{O}$ at infinity with an example shown in Figure~\ref{fig:ec_curve}. The key group operation addition $P_1 + P_2$ is defined as: draw a line through $P_1, P_2$, and the line should intersect the curve at a third point $P_3$. Negate the y coordinate of $P_3$ to get $P_1 + P_2$. The addition operation is illustrated in Figure~\ref{fig:ec_addition}
+Elliptic curve cryptography (ECC) is used in public-key cryptography. ECC is based on elliptic curves groups, which are sets of 2D coordinates $(x, y)$ of the form $y^2 = x^3 + Ax + B$ and an additional point $\mathcal{O}$ at infinity with an example shown in Figure~\ref{fig:ec_curve}. The key group operation addition $P_1 + P_2$ is defined as: draw a line through $P_1, P_2$, and the line should intersect the curve at a third point $P_3$. Negate the y coordinate of $P_3$ to get $P_1 + P_2$. The addition operation is illustrated in Figure~\ref{fig:ec_addition}.
 
 Each curve used in ECC has a base point which is the group generator $G$. Private keys are a random integer $x$, and the corresponding public key is given by 
 

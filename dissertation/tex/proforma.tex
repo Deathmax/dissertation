@@ -24,13 +24,13 @@
 
 % What is Loopix, background
 
-Loopix is a communication system that allows users to anonymously communicate, without revealing that two users are communicating. This project aimed to implement a Loopix client library in Java, and a demonstration application running on top of the library. The implementation was to be evaluated in terms of various performance metrics such as latency and bandwidth overheads.
+Loopix is a communication system that allows users to anonymously communicate, without revealing the identity of communicating parties to an attacker. This project aimed to implement a Loopix client library in Java, and a demonstration application running on top of the library. The implementation was to be evaluated in terms of various performance metrics such as latency and bandwidth overheads. This project requires extensive understanding of cryptography, statistics, and networking to implement.
 
 \section*{Work Completed}
 
 % Sell it better, more numbers
 
-I have created a working, binary compatible Loopix client in Java. A latency overhead due to processing of about \SI{20}{\milli\second} was measured. This is faster than the Python implementation by \SI{2}{\milli\second}. I have also analysed the viability of running a Loopix client on mobile devices, with results showing the trade-off between delays necessary for maintaining anonymity and resource usage such as bandwidth and battery usage may be too large to reconcile for many applications.
+I have created a working, binary-compatible Loopix client in Java. A latency overhead due to processing of about \SI{20}{\milli\second} was measured. This is faster than the Python implementation by \SI{2}{\milli\second}. I have also analysed the viability of running a Loopix client on mobile devices. Results show a poor trade-off between the network latency required to maintain anonymity and resource usage such as network bandwidth and battery usage. Targeting an average delay of \SI{8}{\second} uses \SI{10}{\gibi\byte} per month. I have also implemented an automated testing framework that is able to set-up and test a Loopix network.
 
 \section*{Special Difficulties}
 
