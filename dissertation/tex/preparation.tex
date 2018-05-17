@@ -28,7 +28,7 @@ This chapter begins by providing Loopix's threat model, providing a high-level o
 
 \section{Threat Model}
 
-Loopix's threat model assumes adversaries that are well-resourced and concerned with linking users to their communications, or their partners. Such adversaries are envisioned to have three capabilities:
+Loopix's threat model \cite{piotrowska2017loopix} assumes adversaries that wish to identify users from communications, are well-resourced and envisioned to have three capabilities:
 
 \begin{itemize}
 	\item \textbf{Global Passive Adversary (GPA)} A GPA is able to observe all network traffic in the system, and thus all information flowing between nodes.
@@ -36,7 +36,7 @@ Loopix's threat model assumes adversaries that are well-resourced and concerned 
 	\item \textbf{Insider} The ability to participate in the system as a user, and may deviate from the protocol. This is extended to assume the adversary is able to participate in a conversation with an honest user, and thus become a conversation insider.
 \end{itemize}
 
-Loopix attempts to provide the following security properties:
+Loopix attempts to provide the following security properties under this threat model:
 
 \begin{itemize}
 	\item \textbf{Sender-receiver third-party unlinkability} An adversary should not be able to infer that two users are communicating.
@@ -86,7 +86,7 @@ The project requires that an implementation and evaluation of Loopix be produced
 	\item \textbf{Test framework} A framework for testing my libraries, with respect to correctness and performance.
 \end{itemize}
 
-As there is already an implementation of Loopix, and binary compatibility is required, I have to refer to the behaviour of the implementation rather than the paper. This is because the paper does not describe sufficient implementation detail.
+As there is already an implementation of Loopix, and binary compatibility is required, I have to refer to the behaviour of the implementation rather than the paper \cite{piotrowska2017loopix}. This is because the paper does not describe sufficient implementation detail.
 
 The choice of Java is a result of the aim of getting Loopix on Android devices. Java is the primary language used on Android. Android supports running native code such as C++, which would result in a more portable library. However, Java was chosen as a pure-JVM library would be easier to integrate into an Android application.
 
@@ -116,7 +116,7 @@ Loopix makes use of elliptic curve cryptography for exchanging keys using the Di
 \draw[thick, name path=chord] (-2.5,.5) -- (2.5,2.0);
 \draw[name intersections={of=curve and chord}] (intersection-1) node {$\bullet$} node[above left] {$P_1$}
 (intersection-2) node {$\bullet$} node[above right=-1pt] {$P_2$}
-(intersection-3) node {$\bullet$} coordinate[name=mPQ];
+(intersection-3) node {$\bullet$} node[below right] {$P_3$} coordinate[name=mPQ];
 \draw[dashed, semithick, name path=vertical] (mPQ) ++(0,1) -- +(0,-5.5);
 \draw[name intersections={of=curve and vertical}] (intersection-2) node {$\bullet$} node[below left] {$P_1+P_2$};
 \end{scope}
@@ -174,7 +174,7 @@ The Diffie-Hellman protocol is illustrated in Figure~\ref{fig:dhe}.
 \label{fig:dhe}
 \end{figure}
 
-For an attacker to recover $G^{SK_A*SK_B}$ from only $G^{SK_A}$ and $G^{SK_B}$, the two messages that are sent over a public channel and known to adversaries requires solving the computational Diffie-Hellman problem, which is believed to be computationally hard.
+For an attacker to recover $G^{SK_A*SK_B}$ from only $G^{SK_A}$ and $G^{SK_B}$, the two messages that are sent over a public channel and known to adversaries, requires solving the computational Diffie-Hellman problem, which is believed to be computationally hard.
 
 Loopix generates a random \textit{blinding factor} $b$ for establishing a shared secret key between two parties. The blinding factor is treated as the private key of one party, and $G^b$ is the public key that is sent over the network.
 
@@ -184,7 +184,7 @@ LIONESS is a provably secure wide block cipher \cite{anderson1996two}. It is par
 
 Internally, LIONESS is a four round unbalanced Feistel cipher, the structure of which is shown in Figure~\ref{fig:lioness_feistel}. LIONESS is supposed to take as inputs 4 rounds keys $K_1, K_2, K_3, K_4$, each the length of the hash function output. However, this project uses a variant of LIONESS that takes a single key $K$ and derives from $K$ and the plaintext the required round keys.
 
-\begin{figure}[h]
+\begin{figure}[!h]
 	\includegraphics[width=\linewidth]{../figs/lioness_feistel}
 	\caption{Feistel network of LIONESS encryption and decryption operations. $S_K$ is a stream cipher keyed using $K$, and $H_K$ is a hash function keyed using $K$.}
 	\label{fig:lioness_feistel}

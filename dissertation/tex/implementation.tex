@@ -199,11 +199,14 @@ public class SphinxNode {
         SphinxHeader header, byte[] delta)
         throws SphinxException, CryptoException
 }
+\end{javacode}
+
+\begin{javacode}
 public class SphinxProcessData {
-    public byte[] tag;
-    public byte[] routing;
-    public SphinxHeader header;
-    public byte[] delta;
+	public byte[] tag;
+	public byte[] routing;
+	public SphinxHeader header;
+	public byte[] delta;
 }
 \end{javacode}
 
@@ -394,9 +397,9 @@ Loopix messages should be indistinguishable from each other. Loopix has the foll
 
 \begin{itemize}
 	\item \textbf{Real messages}
-	\item \textbf{Loop cover messages} - Sent to ourselves with the magic number \verb|HT| in the payload.
-	\item \textbf{Drop cover messages} - Sent to a random user with the drop flag set in the routing command for the provider and a random payload.
-	\item \textbf{Dummy messages} - Sent by providers to clients in response to a \verb|PULL| command, with the magic number \verb|HD| in the payload. In the original implementation, this is not a Sphinx packet but rather an unencrypted packet similar to the \verb|PULL| and \verb|SUBSCRIBE| commands. This modification was made to match behaviour described in the Loopix paper. Without the modifications, it is possible to distinguish dummy messages from real and loop cover messages when a client retrieves them from the provider, and analysis of bandwidth usage would be flawed. Although modifications were made to the Python implementation to support this, my implementation is still compatible with the original implementation.
+	\item \textbf{Loop cover messages} Sent to ourselves with the magic number \verb|HT| in the payload.
+	\item \textbf{Drop cover messages} Sent to a random user with the drop flag set in the routing command for the provider and a random payload.
+	\item \textbf{Dummy messages} Sent by providers to clients in response to a \verb|PULL| command, with the magic number \verb|HD| in the payload. In the original implementation, this is not a Sphinx packet but rather an unencrypted packet similar to the \verb|PULL| and \verb|SUBSCRIBE| commands. This modification was made to match behaviour described in the Loopix paper. Without the modifications, it is possible to distinguish dummy messages from real and loop cover messages when a client retrieves them from the provider, and analysis of bandwidth usage would be flawed. Although modifications were made to the Python implementation to support this, my implementation is still compatible with the original implementation.
 \end{itemize}
 
 Having magic numbers in the payload is not ideal, as having a type flag that is visible only to the destination node would be simpler. However, as the goal is compatibility with the Python implementation, this is not implemented.
